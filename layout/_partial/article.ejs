@@ -1,0 +1,76 @@
+<div class="article-container">
+  <div class="article">
+    <h1 class="article-title"><%- post.title %></h1>
+    <div class="article-info">
+      <div class="article-info--item">
+        <div class="article-info--info">
+          <div class="article-info--categories">
+            <span>分类：</span>
+            <%- list_categories(post.categories, {
+              show_count: false,
+              style: false,
+              transform(str) {
+                return titlecase(str);
+              }
+            }) %>
+          </div>
+          <div class="article-info--tags">
+            <span>标签：</span>
+            <%- post.tags ? list_tags(post.tags, { style: false, show_count: false, separator: '' }) : '' %>
+          </div>
+          <p class="article-info--date">日期：<%- date(post.date, 'YYYY-MM-DD HH:mm:ss') %></p>
+        </div>
+        <img src="<%- url_for(post.cover || '/imgs/default-cover.webp') %>" alt="" class="article-cover">
+      </div>
+    </div>
+    <article class="article-content">
+      <%- post.content %>
+    </article>
+  </div>
+  <div class="article-catelogue">
+    <div class="article-catelogue--wrapper">
+      <div class="catelogue catelogue-1">
+        <h3>目录</h3>
+        <%- toc(post.content) %>
+      </div>
+      <% if (page.prev || page.next) { %>
+        <div class="catelogue catelogue-2">
+          <% if (page.prev) { %>
+            <p>
+              <span>上一篇：</span>
+              <a href="/<%- page.prev.path -%>"><%- page.prev.title -%></a>
+            </p>
+          <% } %> 
+          <% if (page.next) { %>
+            <p>
+              <span>下一篇</span>
+              <a href="/<%- page.next.path -%>"><%- page.next.title -%></a>
+            </p>
+          <% } %>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+<script src="<%- url_for('js/prism.js') %>"></script>
+
+<script>
+  $(document).on('pjax:complete', function() {
+    const tocs = document.querySelector('.toc')
+    const as = tocs ? tocs.querySelectorAll('a') : []
+    as.forEach(a => {
+      a.addEventListener('click', e => {
+        const href = decodeURIComponent(a.href)
+        href.search(/#(.*)/)
+        const id = RegExp.$1
+        const target = document.querySelector('#' + id)
+        const top = target.offsetTop
+        document.documentElement.scrollTo({
+          top: top - 100,
+          behavior: 'smooth'
+        })
+        e.preventDefault()
+      })
+    })
+  })
+</script>

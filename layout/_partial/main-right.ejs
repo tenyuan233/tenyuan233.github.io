@@ -1,0 +1,48 @@
+<div class="main-right">
+  <div class="main-right--board">
+    <div class="main-right--title">
+      <h5>公告栏</h5>
+      <i class="iconfont icon-gonggao"></i>
+    </div>
+    <div class="main-right--content">
+      <%- theme.notice %> 
+    </div>
+  </div>
+
+  <div id="aplayer" class="main-right--music"></div>
+
+  <div class="backtop">
+    <i class="iconfont icon-huidaodingbu"></i>
+    <span>回到顶部</span>
+  </div>
+
+  <div class="main-right--site">
+    <div class="main-right--power">
+      <p>Power By <a href="https://hexo.io/zh-cn/docs/">Hexo</a>.</p>
+      <p>Theme：<a href="https://github.com/Aizener/hexo-theme-cola">Cola.</a></p>
+    </div>
+    <p class="main-right--refer"><%- theme.copyright %> </p>
+  </div>
+</div>
+<%
+  const musics = theme.musics.map(item => ({
+    name: item[0],
+    artist: item[1],
+    url: item[2],
+    cover: url_for(item[3]),
+  }))
+%>
+<script>
+  const musics = JSON.parse(`<%- JSON.stringify(musics) %>`)
+  const ap = new APlayer({
+    container: document.querySelector('#aplayer'),
+    audio: musics,
+  })
+
+  document.querySelector('.backtop').addEventListener('click', () => {
+    document.documentElement.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  })
+</script>

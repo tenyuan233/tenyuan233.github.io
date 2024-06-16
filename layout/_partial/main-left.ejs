@@ -1,0 +1,100 @@
+<%
+  const posts = site.posts
+  const archives = []
+  site.posts.each(function(post) {
+    const _date = date(post.date, 'YYYYMM')
+    if (!archives.includes(_date)) {
+      archives.push(_date)
+    }
+  })
+
+  const menu = theme.menu.map(m => ({
+    title: m[0],
+    path: m[1],
+    icon: m[2],
+  }))
+
+  const currDate = Date.now()
+  const publicDate = new Date(theme.public_date).getTime()
+  const runningDate = Math.ceil((currDate - publicDate) / 1000 / 60 / 60 / 24)
+%>
+<div class="main-left">
+  <div class="main-left--block">
+    <div class="main-left--info">
+      <img src="<%- url_for('imgs/avatar.jpg') %>"" class="main-left--avatar" />
+      <div class="main-left--intro">
+        <p class="main-left--name"><%- theme.author_name %></p>
+        <div class="main-left--tags">
+          <span class="main-left--tag"><%- theme.tag1 %></span>
+          <span class="main-left--tag"><%- theme.tag2 %></span>
+        </div>
+      </div>
+    </div>
+  
+    <div>
+      <div class="main-left--motto">
+        <p><%- theme.motto_prev %></p>
+        <p><%- theme.motto_last %></p>
+      </div>
+      <div class="main-left--github">
+        <span class="line"></span>
+        <a href="<%- theme.github_url %>"><i class="logo iconfont icon-github-fill"></i></a>
+        <span class="line"></span>
+      </div>
+      <div class="main-left--statics">
+        <a href="/categories">
+          <div>
+            <span><%- site.categories.length %></span>
+            <span>分类</span>
+          </div>
+        </a>
+        <a href="/tags">
+          <div>
+            <span><%- site.tags.length %></span>
+            <span>标签</span>
+          </div>
+        </a>
+        <a href="/archives">
+          <div>
+            <span><%- archives.length %> </span>
+            <span>归档</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-left--block">
+    <ul class="main-left--menu">
+      <% menu.forEach(function(m){ %>
+        <li>
+          <a href="<%- m.path %>">
+            <span class="header-menu--span"><%- m.title %></span>
+            <i class="header-menu--icon iconfont <%- m.icon %>"></i>
+          </a>
+        </li>
+      <% }) %>
+    </ul>
+  </div>
+
+  <div class="main-left--block">
+    <div class="main-left--site">
+      <h5 class="main-left--title">
+        <span>站点信息</span>
+        <i class="iconfont icon-zhandian"></i>
+      </h5>
+      <p class="main-left--subtitle">
+        <span>文章数目：</span>
+        <span><%- site.posts.length %> 篇</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>最近动态：</span>
+        <span>昨天</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>上线时间：</span>
+        <span><%- runningDate %>天</span>
+      </p>
+    </div>
+  </div>
+</div>

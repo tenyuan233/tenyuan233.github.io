@@ -1,0 +1,92 @@
+<%
+  const leftPosts = [], rightPosts = []
+  page.per_page = 2
+  page.posts.each(function(post, i) {
+    if (i % 2 === 0) {
+      leftPosts.push(post)
+    } else {
+      rightPosts.push(post)
+    }
+  })
+%>
+
+<div class="index">
+  <div class="index-left">
+    <% leftPosts.forEach(function(post){ %>
+      <div class="index-article">
+        <img class="index-article--cover" src="<%- url_for(post.cover || 'imgs/default-cover.webp') %>" alt="">
+        <div class="index-article--content">
+          <a href="<%- url_for(post.path) %>"><%- post.title %> </a>
+          <div>
+            <p>
+              <%- list_categories(post.categories, {
+                show_count: false,
+                style: null,
+                class: 'post-category',
+                transform(str) {
+                  return titlecase(str);
+                }
+              }) %>
+            </p>
+            <p>
+              <%- list_tags(post.tags, { class: '', order: -1, style: null, show_count: false, separator: '<span> ◆ </span>' }) %>
+            </p>
+          </div>
+          <div class="bg"></div>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+  <div class="index-center">
+    <% rightPosts.forEach(function(post){ %>
+      <div class="index-article">
+        <img class="index-article--cover" src="<%- url_for(post.cover || 'imgs/default-cover.webp') %>" alt="">
+        <div class="index-article--content">
+          <a href="<%- url_for(post.path) %>"><%- post.title %> </a>
+          <div>
+            <p>
+              <%- list_categories(post.categories, {
+                show_count: false,
+                style: null,
+                transform(str) {
+                  return titlecase(str)
+                }
+              }) %>
+            </p>
+            <p>
+              <%- list_tags(post.tags, { class: '', order: -1, style: null, show_count: false, separator: '<span> ◆ </span>' }) %>
+            </p>
+          </div>
+          <div class="bg"></div>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+  <div class="index-right">
+    <div class="index-right-wrapper">
+      <%- list_categories(site.categories, {
+        show_count: false,
+        transform(str) {
+          return titlecase(str)
+        },
+      }) %>
+      <%- list_tags(site.tags, { class: { ul: 'tags' }, order: -1, show_count: false }) %>
+      <%- list_archives({ order: -1, format: 'YYYY年MM月', transform(str) {
+        return str
+      } }) %>
+      <!-- <div class="backtop">
+        <i class="iconfont icon-huidaodingbu"></i>
+        <span>回到顶部</span>
+      </div> -->
+    </div>
+  </div>
+</div>
+<% if (site.posts.length > 10) { %>
+  <div class="page">
+    <%- paginator({
+      total: page.total,
+      prev_text: '<',
+      next_text: '>',
+    }) %>
+  </div>
+<% } %>
